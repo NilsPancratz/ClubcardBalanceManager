@@ -80,6 +80,8 @@ def get_resource(key, resource):
 		transactionbuffer = float(resource)
 		transactionbuffer = round(transactionbuffer, 2)
 		guthabenbuffer = guthabenbuffer + transactionbuffer
+		# sicherheitshalber nochmal runden
+		guthabenbuffer = round(guthabenbuffer, 2)
 		# Guthaben in Tabelle clubcards updaten
 		cur.execute("UPDATE clubcards SET balance = (?) WHERE clubcardID = (?)",(guthabenbuffer, key))
 		get_db().commit()
