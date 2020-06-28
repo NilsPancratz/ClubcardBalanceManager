@@ -23,20 +23,18 @@ def create_table():
 
 # gibt einen JSON mit Clubkarten IDs, Guthaben und Transaktionen zurueck
 def returnclubcardjson():
-	print("Funktionsaufruf")
 	c = conn.cursor()
 	c.execute("SELECT * FROM clubcards NATURAL JOIN transactions ORDER BY clubcardid ASC, transactiontimestamp DESC;")
 	# c.execute("SELECT * FROM clubcards NATURAL JOIN transactions ORDER BY clubcardid ASC, transactiontimestamp DESC")
 	# Spalte 0: clubcardID, Spalte 1: amount, Spalte: transactiontimestamp
 	db_data = c.fetchall()
 
-	# Wenn keine Werte vorhanden, Clubkarte anlegen
-	bufferstring = ""
-	lastUID = ""
+	# Wenn keine Werte vorhanden, leeres Array zurueckgeben
 	if len(db_data) == 0:
-		# return "{}"
 		return "[]"
 	else:
+		bufferstring = ""
+		lastUID = ""
 		for i in db_data:
 			if i[0] != lastUID:
 				lastUID = i[0]
