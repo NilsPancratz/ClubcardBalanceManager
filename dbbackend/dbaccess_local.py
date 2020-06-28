@@ -21,6 +21,48 @@ def create_table():
 	conn.commit()
 	conn.close()
 
+# gibt einen JSON mit Clubkarten IDs, Guthaben und Transaktionen zurueck
+def returnclubcardjson():
+	print("Funktionsaufruf")
+	c = conn.cursor()
+	c.execute("SELECT * FROM clubcards NATURAL JOIN transactions ORDER BY clubcardid ASC, transactiontimestamp DESC;")
+	# c.execute("SELECT * FROM clubcards NATURAL JOIN transactions ORDER BY clubcardid ASC, transactiontimestamp DESC")
+	# Spalte 0: clubcardID, Spalte 1: amount, Spalte: transactiontimestamp
+	db_data = c.fetchall()
+
+	# Wenn keine Werte vorhanden, Clubkarte anlegen
+	bufferstring = ""
+	lastUID = ""
+	if len(db_data) == 0:
+		# return "{}"
+		return "[]"
+	else:
+		for i in db_data:
+			if i[0] != lastUID:
+				lastUID = i[0]
+				# loesche zunaechst das letzte Komma
+				bufferstring = bufferstring[:-1]
+				bufferstring += ']},'
+				bufferstring += '{"clubcardID": "'
+				bufferstring += i[0]
+				bufferstring += '", "balance": "'
+				bufferstring += str(i[1])
+				bufferstring += '", "transactions": ['
+			bufferstring += '{"amount": '
+			bufferstring += str(i[2])
+			bufferstring += ', "timestamp": "'
+			bufferstring += str(i[3])
+			bufferstring += '"},'
+	# letzter Durchlauf:
+	# loesche zunaechst das letzte Komma
+	bufferstring = bufferstring[:-1]
+	bufferstring += ']}]'
+	# loesche die ersten drei Zeichen (']},' -> zu Schleifenbeginn angelegt)
+	bufferstring2 = bufferstring[3:]
+	bufferstring = '[' + bufferstring2
+	return bufferstring
+
+
 # UNTEREN FUNKTIONEN MUESSEN GEUPDATED WERDEN : NOCH NICHT AUF ZWEITE TABELLE CLUBCARDS ANGEPASST!!!!
 
 # # Transaktion vornehmen
@@ -61,7 +103,11 @@ def create_table():
 
 # Testing:
 
-create_table()
+
+
+
+# create_table()
 # transaction("12346", "-5.80")
 # print(gettransactions(12345))
 # print(getbalance(12345))
+print(returnclubcardjson())
