@@ -26,7 +26,7 @@ def close_connection(exception):
 
 @app.route('/')
 def index():
-    return "Hallo Clubcard Payment User :)"
+    return "Hello Clubcard Payment User :)"
 
 
 
@@ -59,7 +59,7 @@ def gettransactions(key):
 # @app.route('/clubcardID/<key>/<resource>', methods=['GET', 'PUT', 'POST', 'DELETE'])
 # erlaubt nur PUT oder POST
 @app.route('/clubcardID/<key>/<resource>', methods=['PUT', 'POST'])
-def get_resource(key, resource):
+def posttransaction(key, resource):
 	if request.method == 'PUT' or request.method == 'POST':
 		# Transaktion in transactions einfuegen:
 		cur = get_db().cursor()
@@ -87,5 +87,68 @@ def get_resource(key, resource):
 		get_db().commit()
 		return "Erfolgreich"
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+# Gibt JSON mit ClubkartenID, Guthaben und Transaktionen zurück
+# erlaubt nur GET
+@app.route('/clubcards/')
+def getclubcards():
+	cur = get_db().cursor()
+	cur.execute("SELECT * FROM clubcards NATURAL JOIN transactions ORDER BY clubcardid ASC, transactiontimestamp DESC;")
+	# Spalte 0: clubcardID, Spalte 1: amount, Spalte: transactiontimestamp
+	db_data = cur.fetchall()
+
+	# Wenn keine Werte vorhanden, leeres Array zurueckgeben
+	if len(db_data) == 0:
+		return "[]"
+	else:
+		bufferstring = ""
+		lastUID = ""
+		for i in db_data:
+			if i[0] != lastUID:
+				lastUID = i[0]
+				# loesche zunaechst das letzte Komma
+				bufferstring = bufferstring[:-1]
+				bufferstring += ']},'
+				bufferstring += '{"clubcardID": "'
+				bufferstring += i[0]
+				bufferstring += '", "balance": '
+				bufferstring += str(i[1])
+				bufferstring += ', "transactions": ['
+			bufferstring += '{"amount": '
+			bufferstring += str(i[2])
+			bufferstring += ', "timestamp": "'
+			bufferstring += str(i[3])
+			bufferstring += '"},'
+	# letzter Durchlauf:
+	# loesche zunaechst das letzte Komma
+	bufferstring = bufferstring[:-1]
+	bufferstring += ']}]'
+	# loesche die ersten drei Zeichen (']},' -> zu Schleifenbeginn angelegt)
+	bufferstring2 = bufferstring[3:]
+	bufferstring = '[' + bufferstring2
+	return bufferstring
+
+# Faehrt den Server herunter
+@app.route('/shutdown', methods=['GET'])
+def shutdown():
+    shutdown_server()
+    return 'Server shutting down...'
+
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+
+# ermoeglicht es externen Skripten den Server hochzufahren
+def webApp_start_externscript(webAppstatus):
+	if webAppstatus == True:
+		app.run(host='0.0.0.0')
+
+# ermoeglicht es intern, den Server hochzufahren
+def webApp_start():
+	if __name__ == '__main__':
+		app.run(host='0.0.0.0')
+
+
+
+webApp_start()
