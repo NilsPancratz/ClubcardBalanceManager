@@ -16,7 +16,7 @@ from resources.dbaccess_webApp import shutdown_server
 
 
 windowwidth = 500
-windowheight = 500
+windowheight = 350
 
 class webAppStarter:
 	def __init__(self, master):
@@ -27,32 +27,32 @@ class webAppStarter:
 		self.topframe.place(x=0, y=0, relwidth=1, height=200)
 
 		self.centerframe = tk.Frame(master, bg = 'white')
-		self.centerframe.place(x=0, y=200, relwidth=1, height=300)
+		self.centerframe.place(x=0, y=200, relwidth=1, height=100)
 
 		self.bottomframe = tk.Frame(master, bg = '#5ac8fa')
-		self.bottomframe.place(x=0, y=450, relwidth=1, height=50)
+		self.bottomframe.place(x=0, y=300, relwidth=1, height=50)
 
 		self.iconimg = tk.PhotoImage(file="resources/icon.gif")
 		self.icon = tk.Label(self.topframe, image = self.iconimg, width = 190, height = 190)
 		self.icon.place(x = 500-200-20, y = 0)
 
-		self.iplabel = tk.Label(self.centerframe, text=get_IP(), anchor='e')
-		self.iplabel.place(x=160, y = 40, width=100)
+		self.iplabel = tk.Label(self.centerframe, text=get_IP(), anchor='e', bg='white')
+		self.iplabel.place(x=160, y = 25, width=100)
 
-		self.iplabel_static = tk.Label(self.centerframe, text="Lokale IP-Adresse:")
-		self.iplabel_static.place(x=20, y=40)
+		self.iplabel_static = tk.Label(self.centerframe, text="Lokale IP-Adresse:", bg='white')
+		self.iplabel_static.place(x=10, y=25)
 
-		self.statuslabel = tk.Label(self.centerframe, text="", anchor='e')
-		self.statuslabel.place(x=160, y = 80, width=100)
+		self.statuslabel = tk.Label(self.centerframe, text="", anchor='e', bg='white')
+		self.statuslabel.place(x=160, y = 65, width=100)
 
 		self.button_start = tk.Button(self.centerframe, text="Web-Zugriff starten", command=self.button_start_clicked)
-		self.button_start.place(x=500-220, y=40, width=200)
+		self.button_start.place(x=500-220, y=25, width=200)
 
 		self.button_stop = tk.Button(self.centerframe, text="Web-Zugriff stoppen", command=self.button_stop_clicked)
-		self.button_stop.place(x=500-220, y=80, width=200)
+		self.button_stop.place(x=500-220, y=65, width=200)
 
 		self.button_check = tk.Button(self.centerframe, text="Verbindung checken", command=self.button_check_clicked)
-		self.button_check.place(x=20, y=80, width=150)
+		self.button_check.place(x=20, y=65, width=150)
 
 		self.lastbackuplabel_static = tk.Label(self.bottomframe, text="Letzte Sicherungskopie der Datenbank:", fg='white', bg='#5ac8fa')
 		self.lastbackuplabel_static.place(x=20, y=15)
