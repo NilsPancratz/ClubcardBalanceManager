@@ -1,6 +1,6 @@
 import sqlite3
 
-databasefile = 'testdatabase.db'
+databasefile = 'db.db'
 conn = sqlite3.connect(databasefile)
 
 # Anlegen der Tabellen und ggf. der Datenbank (wenn nicht vorhanden):
@@ -104,8 +104,8 @@ def returnclubcardjson():
 
 
 
-# create_table()
+create_table()
 # transaction("12346", "-5.80")
 # print(gettransactions(12345))
 # print(getbalance(12345))
-print(returnclubcardjson())
+# print(returnclubcardjson())
