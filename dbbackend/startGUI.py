@@ -27,10 +27,10 @@ class webAppStarter:
 		self.topframe.place(x=0, y=0, relwidth=1, height=200)
 
 		self.centerframe = tk.Frame(master, bg = 'white')
-		self.centerframe.place(x=0, y=200, relwidth=1, height=100)
+		self.centerframe.place(x=0, y=200, relwidth=1, height=105)
 
 		self.bottomframe = tk.Frame(master, bg = '#5ac8fa')
-		self.bottomframe.place(x=0, y=300, relwidth=1, height=50)
+		self.bottomframe.place(x=0, y=305, relwidth=1, height=45)
 
 		self.iconimg = tk.PhotoImage(file="resources/icon.gif")
 		self.icon = tk.Label(self.topframe, image = self.iconimg, width = 190, height = 190)
@@ -55,12 +55,12 @@ class webAppStarter:
 		self.button_check.place(x=20, y=65, width=150)
 
 		self.lastbackuplabel_static = tk.Label(self.bottomframe, text="Letzte Sicherungskopie der Datenbank:", fg='white', bg='#5ac8fa')
-		self.lastbackuplabel_static.place(x=20, y=15)
+		self.lastbackuplabel_static.place(x=20, y=10)
 
 		lastbackuplabeltext =  lastbackup[8:10] +"."+lastbackup[5:7] +"." + lastbackup[0:4] +", " + lastbackup[11:13] + ":" + lastbackup[14:16] + ":" +lastbackup[17:19] + " Uhr"
 
 		self.lastbackuplabel = tk.Label(self.bottomframe, text=lastbackuplabeltext, fg='white', bg='#5ac8fa', anchor='e')
-		self.lastbackuplabel.place(x=500-200-20, y=15, width=200)
+		self.lastbackuplabel.place(x=500-200-20, y=10, width=200)
 
 	def button_start_clicked(self):
 		self.statuslabel.config(text="")
