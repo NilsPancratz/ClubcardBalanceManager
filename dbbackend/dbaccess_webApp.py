@@ -6,7 +6,7 @@ import json
 app = Flask(__name__)
 #api = Api(app)
 
-databasefile = 'testdatabase.db'
+databasefile = 'db.db'
 conn = sqlite3.connect(databasefile)
 
 
@@ -142,7 +142,10 @@ def shutdown_server():
 # ermoeglicht es externen Skripten den Server hochzufahren
 def webApp_start_externscript(webAppstatus):
 	if webAppstatus == True:
-		app.run(host='0.0.0.0')
+		try:
+			app.run(host='0.0.0.0')
+		except:
+			print("konnte nicht hochgefahren werden, vielleicht bereits up?")
 
 # ermoeglicht es intern, den Server hochzufahren
 def webApp_start():
