@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 
 import socket
 import threading
@@ -72,7 +73,7 @@ class webAppStarter:
 		try:
 			r = requests.get('http://localhost:5000/shutdown')
 		except:
-			print("konnte nicht heruntergefahren werden, vielleicht bereits down?")
+			print("could not shut down server connection, already down?")
 
 	def button_check_clicked(self):
 		self.statuslabel.config(text="")
@@ -106,7 +107,16 @@ def makebackupofdb(timestamp):
 	try:
 		shutil.copyfile(original, target)
 	except:
-		print("Backup nicht moeglich: Ordner evtl. nicht vorhanden?")
+		print("DB could not be backed up: folder 'db-backups' there?")
+
+
+def on_closing():
+	if messagebox.askokcancel("Beenden?", "Soll der 'Clubcard Balance Manager' wirklich beendet werden?\n\nBestehende Server-Verbindungen werden ggf. heruntergefahren."):
+		try:
+			r = requests.get('http://localhost:5000/shutdown')
+		except:
+			print("")
+		root.destroy()
 
 
 # Start des Python-Skripts:
@@ -128,4 +138,5 @@ root.title("Clubcard Balance Manager: webAppStarter")
 root.minsize(windowwidth,windowheight)
 root.maxsize(windowwidth,windowheight)
 m = webAppStarter(root)
+root.protocol("WM_DELETE_WINDOW", on_closing)
 root.mainloop()
