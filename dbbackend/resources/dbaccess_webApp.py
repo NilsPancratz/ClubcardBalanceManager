@@ -70,6 +70,15 @@ def posttransaction(key, resource):
 		cur.execute("SELECT balance FROM clubcards WHERE clubcardID= (?)", (key,))
 		# Spalte 0: clubcardID, Spalte 1: amount, Spalte: transactiontimestamp
 		db_data = cur.fetchall()
+
+		# Wenn keine Werte vorhanden, Clubkarte anlegen
+		if len(db_data) == 0:
+			# return "{}"
+			cur.execute("INSERT INTO clubcards (clubcardID, balance) VALUES (? , 0.0)", (key,))
+			get_db().commit()
+			cur.execute("SELECT balance FROM clubcards WHERE clubcardID= (?)", (key,))
+			db_data = cur.fetchall()
+		
 		bufferstring = str(db_data)
 		# String zurechtschneiden? -> vorne zwei weg, hinteren 3 weg, siehe oben
 		bufferstring = bufferstring[2:-3]
