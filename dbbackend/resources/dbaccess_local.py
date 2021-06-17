@@ -1,4 +1,5 @@
 import sqlite3
+import json
 
 databasefile = 'db.db'
 conn = sqlite3.connect(databasefile)
@@ -61,6 +62,80 @@ def returnclubcardjson():
 	return bufferstring
 
 
+
+
+def getbalance(key):
+	print("Frage Guthaben für Karte Nr. "+key+" ab.")
+	# return 14.23
+	cur = conn.cursor()
+	cur.execute("SELECT balance FROM clubcards WHERE clubcardID= (?)", (key,))
+	# Spalte 0: clubcardID, Spalte 1: amount, Spalte: transactiontimestamp
+	db_data = cur.fetchall()
+
+	# Wenn keine Werte vorhanden, Clubkarte anlegen
+	if len(db_data) == 0:
+		print("kein Eintrag, lege an ...")
+
+		# return "{}"
+		cur.execute("INSERT INTO clubcards (clubcardID, balance) VALUES (? , 0.0)", (key,))
+		conn.commit()
+		cur.execute("SELECT balance FROM clubcards WHERE clubcardID= (?)", (key,))
+		db_data = cur.fetchall()
+		
+	# bufferstring = '{"clubcardID": '+str(key) + ', balance: '+str(db_data)
+	bufferstring = str(db_data)
+	# String zurechtschneiden? -> vorne zwei weg, hinteren 3 weg
+	payload = bufferstring[2:-3]
+	print(payload)
+	return payload
+
+
+
+def transferamount(key, amount):
+	print("Transaction: UID "+key+" Amount: "+str(amount))
+	# Transaktion in transactions einfuegen:
+	cur = conn.cursor()
+	cur.execute("INSERT INTO transactions (clubcardID, amount) VALUES (? , ? )",(key, amount))
+	conn.commit()
+	# Guthaben abfragen und in Buffer speichern:
+	guthabenbuffer = 0.0
+	cur.execute("SELECT balance FROM clubcards WHERE clubcardID= (?)", (key,))
+	# Spalte 0: clubcardID, Spalte 1: amount, Spalte: transactiontimestamp
+	db_data = cur.fetchall()
+
+	# Wenn keine Werte vorhanden, Clubkarte anlegen
+	if len(db_data) == 0:
+		print("kein Eintrag, lege an ...")
+
+		# return "{}"
+		cur.execute("INSERT INTO clubcards (clubcardID, balance) VALUES (? , 0.0)", (key,))
+		get_db().commit()
+		cur.execute("SELECT balance FROM clubcards WHERE clubcardID= (?)", (key,))
+		db_data = cur.fetchall()
+	
+	bufferstring = str(db_data)
+	# String zurechtschneiden? -> vorne zwei weg, hinteren 3 weg, siehe oben
+	bufferstring = bufferstring[2:-3]
+	# ggf. auf zwei Nachkommastellen runden (Konvertierungsfehler abfedern):
+	guthabenbuffer = float(bufferstring)
+	guthabenbuffer = round(guthabenbuffer, 2)
+	# neues Guthaben berechnen:
+	transactionbuffer = amount
+	transactionbuffer = round(transactionbuffer, 2)
+	guthabenbuffer = guthabenbuffer + transactionbuffer
+	# sicherheitshalber nochmal runden
+	guthabenbuffer = round(guthabenbuffer, 2)
+	# Guthaben in Tabelle clubcards updaten
+	cur.execute("UPDATE clubcards SET balance = (?) WHERE clubcardID = (?)",(guthabenbuffer, key))
+	conn.commit()
+	return "Erfolgreich"
+
+
+
+
+
+
+
 # UNTEREN FUNKTIONEN MUESSEN GEUPDATED WERDEN : NOCH NICHT AUF ZWEITE TABELLE CLUBCARDS ANGEPASST!!!!
 
 # # Transaktion vornehmen
@@ -104,8 +179,15 @@ def returnclubcardjson():
 
 
 
-create_table()
+# create_table()
+
+
+
 # transaction("12346", "-5.80")
 # print(gettransactions(12345))
 # print(getbalance(12345))
 # print(returnclubcardjson())
+
+# print(getbalance("04:F8:DC:A2:2C:66:80"))
+
+# transferamount("04:F8:DC:A2:2C:66:80",-0.83)
