@@ -183,11 +183,11 @@ def transferamount(key, amount):
 
 
 
-# transaction("12346", "-5.80")
+# transaction("123456", "-5.80")
 # print(gettransactions(12345))
-# print(getbalance(12345))
+# print(getbalance(123456))
 # print(returnclubcardjson())
 
-# print(getbalance("04:F8:DC:A2:2C:66:80"))
+# print(getbalance("123456"))
 
-# transferamount("04:F8:DC:A2:2C:66:80",-0.83)
+# transferamount("123456",-10.83)
