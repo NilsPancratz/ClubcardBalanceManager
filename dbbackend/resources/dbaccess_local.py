@@ -65,7 +65,7 @@ def returnclubcardjson():
 
 
 def getbalance(key):
-	print("Frage Guthaben für Karte Nr. "+key+" ab.")
+	print("Frage Guthaben für Karte Nr. "+key+" ab ...")
 	# return 14.23
 	cur = conn.cursor()
 	cur.execute("SELECT balance FROM clubcards WHERE clubcardID= (?)", (key,))
@@ -86,7 +86,7 @@ def getbalance(key):
 	bufferstring = str(db_data)
 	# String zurechtschneiden? -> vorne zwei weg, hinteren 3 weg
 	payload = bufferstring[2:-3]
-	print(payload)
+	print("Guthaben: "+payload)
 	return payload
 
 
