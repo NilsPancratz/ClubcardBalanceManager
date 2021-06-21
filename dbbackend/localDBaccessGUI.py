@@ -1,4 +1,4 @@
-# getestet mit USB-Lesegeraet "KKmoon 14443A", dabei auszuwaehlendes Format: "8hße" (Nr. 3), dann byteweise tauschen
+# getestet mit USB-Lesegeraet "KKmoon 14443A", dabei auszuwaehlendes Format: "8h{sz}e" (Nr. 3), dann byteweise tauschen
 
 
 import tkinter as tk
@@ -114,7 +114,7 @@ class LocalBalanceManager:
 			text = self.clubcardInputField.get(1.0, tk.END)[:-1]
 			# print(UIDbyteweisetauschen(text))
 			print(len(text))
-			if ":" not in text and len(text)==14: #wenn kein : im String ist und Laenge = 14 Wahrscheinlichkeit groß, dass Eingabe ueber RFID Reader erfolgt ist und Umrechnung erfolgen muss
+			if ":" not in text and len(text)==14: #wenn kein : im String ist und Laenge = 14 Wahrscheinlichkeit gross, dass Eingabe ueber RFID Reader erfolgt ist und Umrechnung erfolgen muss
 				self.clubcardInputField.delete("1.0", "end") #"1.0" und "end" beziehen sich auf das erste Zeichen und das letzte Zeichen des Inhalts 
 				self.clubcardInputField.insert("end", UIDbyteweisetauschen(text))
 				self.currentUID=UIDbyteweisetauschen(text)
