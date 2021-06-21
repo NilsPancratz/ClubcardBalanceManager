@@ -65,7 +65,7 @@ def returnclubcardjson():
 
 
 def getbalance(key):
-	print("Frage Guthaben für Karte Nr. "+key+" ab ...")
+	print("Frage Guthaben fuer Karte Nr. "+key+" ab ...")
 	# return 14.23
 	cur = conn.cursor()
 	cur.execute("SELECT balance FROM clubcards WHERE clubcardID= (?)", (key,))
